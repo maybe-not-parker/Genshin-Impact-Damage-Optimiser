@@ -1,6 +1,2 @@
-temp = ["cryo", "cryo", "hydro", "cryo"]
-
-if all(i in ("cryo", "hydro") for i in temp):
-      print("yes")
-else:
-      print("no")
+if not True and True:
+    print("This will not print")

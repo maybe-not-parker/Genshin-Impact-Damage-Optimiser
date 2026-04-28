@@ -55,6 +55,7 @@ def damage_formula(
        if reaction:
               amplifying_reaction = reaction_multiplier * (1 + ((2.78*elemental_mastery) / (1400 + elemental_mastery) + reaction_bonus))
               damage *= amplifying_reaction
+       
        return damage
 
 def calculate_roll(roll, roll_type, roll_data):
@@ -71,3 +72,44 @@ def calculate_roll(roll, roll_type, roll_data):
                             best = combo
        
        return best
+
+def apply_weapon_conditional(file, character, trigger):
+       conditionals = character.weapon.get("conditionals", {})
+       effect = conditionals.get(trigger, {})
+       for stat, value in effect.items():
+              character.total_stats[stat] += value
+              character.set_effect_stats[stat] += value
+
+def clear_weapon_conditionals(file, character, trigger):
+       conditionals = character.weapon.get("conditionals", {})
+       effect = conditionals.get(trigger, {})
+       for stat, value in effect.items():
+              character.total_stats[stat] -= value
+              character.set_effect_stats[stat] -= value
+
+def skirk_combo(skirk):
+       num = 0
+       num += skirk.calculate_damage("te")
+       num += skirk.calculate_damage("n1")
+       num += skirk.calculate_damage("n2")
+       num += skirk.calculate_damage("q")
+       num += skirk.calculate_damage("n1")
+       num += skirk.calculate_damage("n2")
+       return num
+
+def team_resonance(team):
+       character_elements = [character.character_data["element"].lower() for character in team]
+       if character_elements.count("cryo") >= 2:
+              return {"CR": 15}
+       if character_elements.count("hydro") >= 2:
+              return {"HP%": 25}
+       if character_elements.count("pyro") >= 2:
+              return {"ATK%": 25}
+       if character_elements.count("electro") >= 2:
+              return {"ELECTRO%": 15}
+       if character_elements.count("anemo") >= 2:
+              return #{"ANEMO%": 15}
+       if character_elements.count("geo") >= 2:
+              return #{"GEO%": 15}
+       if character_elements.count("dendro") >= 2:
+              return #{"DENDRO%": 15}

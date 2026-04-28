@@ -1,6 +1,8 @@
 import json
 import helper_functions
 from collections import Counter
+import artifact_effects
+import weapon_effects
 
 with open("character_data.json", "r") as file:
       character_list = json.load(file)
@@ -11,7 +13,10 @@ with open("artifact_data.json", "r") as file:
 with open("roll_data.json", "r") as file:
       artifact_roll_data = json.load(file)
 
-
+enemy_level = 100
+weapon_effects = {
+      "azurelight" : weapon_effects.azurelight
+}
 class Enemy():
       def __init__(self, level=90):
             self.enemy_level = level
@@ -21,6 +26,8 @@ class Character():
             self.character_level = level
             self.constellation = constellation
             self.talents = talents
+            self.energy = 0
+
             for name, data in character_list.items():
                   if name == character:
                         self.character_data = data
@@ -85,6 +92,7 @@ class Character():
                   if weapon_type == self.character_data["weapon_archetype"]:
                         for weapon_name, weapon_data in weapon_info.items():
                               if weapon_name == look_up_weapon_name:
+                                    self.weapon_name = weapon_name
                                     self.weapon = weapon_data
       def get_base_stats(self, stat):
             return self.base_stats[stat]
@@ -111,6 +119,9 @@ class Character():
                                     "CA%": 0,
                                     "SKILL%": 0,
                                     "BURST%": 0}
+            self.set_effect_stats = {key: 0 for key in self.artifact_total_stats}
+            self.weapon_effect_stats = {key: 0 for key in self.artifact_total_stats}
+            self.constellation_effect_stats = {key: 0 for key in self.artifact_total_stats}
             artifact_types = ["flower", "feather", "sands", "circlet", "goblet"]
 
             for artifact in artifact_types:
@@ -130,31 +141,35 @@ class Character():
 
               
             #calculate set effect
-            temp = ["SR", "SR", "SR", "SR", "PF"]
+            
             artifact_types = ["flower", "feather", "sands", "goblet", "circlet"]
             set_count = Counter(
-                  getattr(self, f"{artifact_types}_set", f"{i}")
-                  for i in temp
+                  getattr(self, f"{artifact}_set")
+                  for artifact in artifact_types
+                  if hasattr(self, f"{artifact}_set")
             )
             for set_name, count in set_count.items():
                   
-                  if count >= 4:
-                        for name, detail in artifact_list.items():
-                              if set_name == name:
+                  # if count >= 4:
+                  #       for name, detail in artifact_list.items():
+                  #             if set_name == name:
+                  #                   self.artifact_total_stats[detail["2p"].split("_")[0]] += int(detail["2p"].split("_")[1])
+                  #                   if "active" in detail["4p"]:
+                  #                         for i in detail["4p"]:
+                  #                               if i != "active":
+                  #                                     self.bonus_artifact_stats = [i for i in detail]
+                  #                   else:
+                  #                         for i in detail["4p"]:
+                  #                               self.artifact_total_stats[i.split("_")[0]] += int(i.split("_")[1])
+                  #                   break
+                  if count >= 2:
+                        detail = artifact_list.get(set_name)
+                        if detail:
+                              if "/" in detail["2p"]:
+                                    for i in detail["2p"].split("/"):
+                                          self.artifact_total_stats[i.split("_")[0]] += int(i.split("_")[1])
+                              else:
                                     self.artifact_total_stats[detail["2p"].split("_")[0]] += int(detail["2p"].split("_")[1])
-                                    if "active" in detail["4p"]:
-                                          for i in detail["4p"]:
-                                                if i != "active":
-                                                      self.bonus_artifact_stats = [i for i in detail]
-                                    else:
-                                          for i in detail["4p"]:
-                                                self.artifact_total_stats[i.split("_")[0]] += int(i.split("_")[1])
-                                    break
-                  elif count >= 2:
-                        for name, detail in artifact_list.items():
-                              if set_name == name:
-                                    self.artifact_total_stats[detail["2p"].split("_")[0]] += int(detail["2p"].split("_")[1])
-                                    break
             return None
       def calculate_weapon_stats(self):
             self.weapon_stats = {"ATK": 0,
@@ -244,7 +259,7 @@ class Eula(Character):
                                                   self.total_stats["CR"],
                                                   self.total_stats["CD"],
                                                   self.character_level,
-                                                  97,
+                                                  enemy_level,
                                                   self.total_stats["EM"],
                                                   0,
                                                   0,
@@ -267,7 +282,7 @@ class Eula(Character):
                                                   self.total_stats["CR"],
                                                   self.total_stats["CD"],
                                                   self.character_level,
-                                                  97,
+                                                  enemy_level,
                                                   self.total_stats["EM"],
                                                   0,
                                                   0,
@@ -288,7 +303,7 @@ class Eula(Character):
                                                   self.total_stats["CR"],
                                                   self.total_stats["CD"],
                                                   self.character_level,
-                                                  97,
+                                                  enemy_level,
                                                   self.total_stats["EM"],
                                                   0,
                                                   0,
@@ -306,7 +321,7 @@ class Eula(Character):
                                                   self.total_stats["CR"],
                                                   self.total_stats["CD"],
                                                   self.character_level,
-                                                  97,
+                                                  enemy_level,
                                                   self.total_stats["EM"],
                                                   0,
                                                   0,
@@ -325,7 +340,7 @@ class Eula(Character):
                                                   self.total_stats["CR"],
                                                   self.total_stats["CD"],
                                                   self.character_level,
-                                                  97,
+                                                  enemy_level,
                                                   self.total_stats["EM"],
                                                   0,
                                                   0,
@@ -356,7 +371,7 @@ class Eula(Character):
                                                       self.total_stats["CR"],
                                                       self.total_stats["CD"],
                                                       self.character_level,
-                                                      97,
+                                                      enemy_level,
                                                       self.total_stats["EM"],
                                                       0,
                                                       0,
@@ -375,7 +390,7 @@ class Eula(Character):
                                                   self.total_stats["CR"],
                                                   self.total_stats["CD"],
                                                   self.character_level,
-                                                  97,
+                                                  enemy_level,
                                                   self.total_stats["EM"],
                                                   0,
                                                   0,
@@ -403,18 +418,6 @@ class Bennett(Character):
             buff_value = self.total_base_atk * self.burst_multiplier[self.talents[2]-1]["buff"]/100 if self.constellation == 0 else self.total_base_atk * (self.burst_multiplier[self.talents[2]-1]["buff"]+20)/100
             return {"ATK" : buff_value}
 
-def eula_combo(eula):
-
-      num = 0
-      num += eula.calculate_damage("te")
-      num += eula.calculate_damage("q")
-      for i in range(1, 5):
-            num += eula.calculate_damage(f"n{i}")
-      num += eula.calculate_damage("he")
-      for i in range(1, 5):
-            num += eula.calculate_damage(f"n{i}")
-      num += eula.calculate_damage("q")
-      return num
 
 class Skirk(Character):
       def __init__(self , character, level, constellation=2, talents=[1,9,9]):
@@ -422,16 +425,20 @@ class Skirk(Character):
             self.seven_phase_flash = False
             self.serpent_subtlety = 0
             self.void_rifts = 0
-
+            self.death_crossing = 0
+            self.death_crossing_multipliers_normal = [110, 120, 170]
+            self.death_crossing_multipliers_burst = [105, 115, 160]
+            self.trigger_quota = 0
+            self.trigger_quota_multiplier = 0
       def calculate_damage(self, attack):
-            if not self.seven_phase_flash and attack[0] == "n":
-                  print(self.total_stats)
+            attack = attack.lower()
+            if not self.seven_phase_flash and "n" in attack:
                   return helper_functions.damage_formula(self.normal_attack_multiplier[self.talents[0] - 1][int(attack[1])-1], 
-                                                      self.total_atk,
+                                                      self.calculate_total_atk(),
                                                       self.total_stats["CR"],
                                                       self.total_stats["CD"],
                                                       self.character_level,
-                                                      97,
+                                                      enemy_level,
                                                       self.total_stats["EM"],
                                                       0,
                                                       0,
@@ -445,27 +452,86 @@ class Skirk(Character):
                                                       self.total_stats["PHYSICAL"] + self.total_stats["NA%"],
                                                       0)
             elif "n" in attack:
-
-                  pass
-            elif "e" in attack:
-                  if attack[0] == "t":
-                        self.seven_phase_flash = True
-                        self.serpent_subtlety += 45
-                  elif attack[0] == "h":
-                        self.void_rifts = 0
-                        self.serpent_subtlety += 45
-            elif "q" in attack:
-                  if self.seven_phase_flash:
-                        pass
-                  else:
-                        overflow_bonus = self.total_atk * (self.serpent_subtlety - 50) * self.burst_multiplier[self.talents[2] - 1]["subtlety"]/100 if self.serpent_subtlety > 50 else 0
-                        damage = 0
-                        damage += helper_functions.damage_formula(self.burst_multiplier[self.talents[2] - 1]["slash"], 
-                                                      self.total_atk,
+                  
+                  damage = helper_functions.damage_formula(self.skill_multiplier[self.talents[1] - 1][int(attack[1])-1], 
+                                                      self.calculate_total_atk(),
                                                       self.total_stats["CR"],
                                                       self.total_stats["CD"],
                                                       self.character_level,
-                                                      97,
+                                                      enemy_level,
+                                                      self.total_stats["EM"],
+                                                      0,
+                                                      0,
+                                                      False,
+                                                      0,
+                                                      0,
+                                                      0.1,
+                                                      0,
+                                                      1,
+                                                      0,
+                                                      self.total_stats["CRYO"] + self.total_stats["NA%"] + self.trigger_quota_multiplier if self.trigger_quota > 0 else self.total_stats["CRYO"] + self.total_stats["NA%"],
+                                                      0)
+                  if self.trigger_quota > 0 and int(attack[1]) in [1, 2,5]:
+                        self.trigger_quota -= 1
+                  elif self.trigger_quota > 0 and int(attack[1]) in [3, 4]:
+                        self.trigger_quota -= 2
+                  return damage
+            elif "ca" in attack:
+                  return helper_functions.damage_formula(self.skill_multiplier[self.talents[1] - 1][5] if self.seven_phase_flash else self.normal_attack_multiplier[self.talents[0] - 1][5], 
+                                                      self.calculate_total_atk(),
+                                                      self.total_stats["CR"],
+                                                      self.total_stats["CD"],
+                                                      self.character_level,
+                                                      enemy_level,
+                                                      self.total_stats["EM"],
+                                                      0,
+                                                      0,
+                                                      False,
+                                                      0,
+                                                      0,
+                                                      0.1,
+                                                      0,
+                                                      1,
+                                                      0,
+                                                      self.total_stats["CRYO"] + self.total_stats["CA%"] if self.seven_phase_flash else self.total_stats["PHYSICAL"] + self.total_stats["CA%"],
+                                                      0)
+            elif "e" in attack:
+
+                  weapon_effect = weapon_effects.get(self.weapon_name)
+                  if weapon_effect:
+                        weapon_effect(self.weapon, self, attack)
+
+                  if attack[0] == "t":
+                        self.seven_phase_flash = True
+                        self.serpent_subtlety += 45
+                        return 0
+                  elif attack[0] == "h":
+                        self.void_rifts = 0
+                        self.serpent_subtlety += 45
+                        return 0
+            elif "q" in attack:
+                  if self.seven_phase_flash:
+                        self.trigger_quota = 10
+                        self.trigger_quota_multiplier = 8 + 4 * self.void_rifts
+                        self.void_rifts = 0
+                        for key in list(self.constellation_effect_stats):
+                              self.total_stats[key] -= self.constellation_effect_stats[key]
+                              self.constellation_effect_stats[key] = 0
+                        if self.constellation >= 2:
+                              self.total_stats["ATK%"] += 70
+                              self.constellation_effect_stats["ATK%"] += 70
+
+                              pass
+                        return 0
+                  else:
+                        overflow_bonus = self.calculate_total_atk() * (self.serpent_subtlety - 50) * self.burst_multiplier[self.talents[2] - 1]["subtlety"]/100 if self.serpent_subtlety > 50 else 0
+                        damage = 0
+                        damage += helper_functions.damage_formula(self.burst_multiplier[self.talents[2] - 1]["slash"], 
+                                                      self.calculate_total_atk(),
+                                                      self.total_stats["CR"],
+                                                      self.total_stats["CD"],
+                                                      self.character_level,
+                                                      enemy_level,
                                                       self.total_stats["EM"],
                                                       0,
                                                       0,
@@ -479,11 +545,11 @@ class Skirk(Character):
                                                       self.total_stats["CRYO"],
                                                       0)
                         damage += helper_functions.damage_formula(self.burst_multiplier[self.talents[2] - 1]["final_slash"], 
-                                                      self.total_atk,
+                                                      self.calculate_total_atk(),
                                                       self.total_stats["CR"],
                                                       self.total_stats["CD"],
                                                       self.character_level,
-                                                      97,
+                                                      enemy_level,
                                                       self.total_stats["EM"],
                                                       0,
                                                       0,
@@ -498,7 +564,48 @@ class Skirk(Character):
                                                       0)
                         self.serpent_subtlety = 0
                         return damage
+      def skirk_reset(self):
+            self.seven_phase_flash = False
+            self.serpent_subtlety = 0
+            self.void_rifts = 0
+            self.trigger_quota = 0
+            self.trigger_quota_multiplier = 0
+            for key in self.weapon_effect_stats:
+                  self.total_stats[key] -= self.weapon_effect_stats[key]
+                  self.weapon_effect_stats[key] = 0
+            for key in self.constellation_effect_stats:
+                  self.total_stats[key] -= self.constellation_effect_stats[key]
+                  self.constellation_effect_stats[key] = 0
+      def passive_talent_check(self, team):
+            if all(character.character_data["element"] in ("Cryo", "Hydro") and team.count("cryo") > 0 and team.count("hydro") > 0 for character in team):
+                  for i in team:
+                        i.talents[1] += 1
+      def calculate_total_atk(self):
+            return self.total_base_atk * (1+self.total_stats["ATK%"]/100) + self.total_stats["ATK"]
 
+class team():
+      def __init__(self, characters):
+            self.characters = characters
+            self.max_team_size = 4
+            self.team_buffs = {}
+            self.onfield_buff = {}
+            self.active_character = None
+      def apply_team_resonance(self):
+            resonance_buff = helper_functions.team_resonance(self.characters)
+            for character in self.characters:
+                  character.external_buffs(resonance_buff)
+      def switch_character(self, character):
+            if character in self.characters:
+                  if self.active_character:
+                        self.active_character.reset_external_buffs()
+                  self.active_character = character
+
+      def insert_character(self, character):
+            if len(self.characters) < self.max_team_size:
+                  self.characters.append(character)
+      def remove_character(self, character):
+            if character in self.characters:
+                  self.characters.remove(character)
 def main():
       eula = Eula("Eula", 90, 2, [10, 10, 10])
       eula.init_base_stats()
@@ -528,13 +635,25 @@ def main():
       skirk.insert_artifact("HP", {"CR": 7.4, "ATK%": 9.3, "CD": 25.6, "DEF%": 5.8}, "flower", "MH")
       skirk.insert_artifact("ATK", {"CD": 14.8, "CR": 6.6, "HP%": 5.3, "ATK%": 14.6}, "feather", "MH")
       skirk.insert_artifact("ATK%", {"CD": 36.5, "CR": 2.7, "ER": 6.5, "HP": 538}, "sands", "PF")
-      skirk.insert_artifact("ATK%", {"CD": 37.3, "DEF": 39, "CR": 3.5, "ATK": 16}, "goblet", "MH")
+      skirk.insert_artifact("ATK%", {"CD": 37.3, "DEF": 39, "CR": 3.5, "ATK": 16}, "goblet", "SR")
       skirk.insert_artifact("ATK%", {"CR": 3.5, "CD": 24.1, "DEF": 19, "HP%": 9.3}, "circlet", "MH")
       skirk.calculate_artifact_total_stats()
       skirk.calculate_weapon_stats()
       skirk.calculate_total_stats()
+      artifact_effects.marechaussee(artifact_list, skirk, stacks=3)
+      num = 0
 
-      print(skirk.calculate_damage("n1"))
-      
+      #skirk.calculate_damage("te")
+      #num += skirk.calculate_damage("n1")
+      #num += skirk.calculate_damage("n2")
+      #skirk.calculate_damage("q")
+      #num += skirk.calculate_damage("n1")
+      #num += skirk.calculate_damage("n2")
+      control = helper_functions.skirk_combo(skirk)
+      skirk.skirk_reset()
+
+      response = helper_functions.skirk_combo(skirk)
+      print(f"{(response/control - 1)*100:.2f}%")
+
 if __name__ == "__main__":
       main()

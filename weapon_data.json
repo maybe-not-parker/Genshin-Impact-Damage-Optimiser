@@ -20,8 +20,10 @@
             "base_atk": 674.34,
             "bonus"   : "CR_22.05",
             "affix"   : "",
-            "conditional_affix" : "ATK%_24",
-            "conditional_affix_2" : "ATK%_24/CD_40"
+            "conditional_affix" : {
+                "on_skill" : "ATK%_24",
+                "energy" : "CD_40/ATK%_24"
+            }
         }
     },
     "bow"     : {

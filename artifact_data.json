@@ -1,4 +1,4 @@
 {
-       "PF" : {"2p" : "PHYSICAL_25", "4p": ["active", "ATK%_18", "PHYSICAL_25"]},
-       "MH" : {"2p" : "NA%_15/CA%_15", "4p" : ["active", "CR_12", "stacks_3"]}
+       "PF" : {"2p" : "PHYSICAL_25", "4p": "ATK%_9"},
+       "MH" : {"2p" : "NA%_15/CA%_15", "4p" : "CR_12"}
 }
