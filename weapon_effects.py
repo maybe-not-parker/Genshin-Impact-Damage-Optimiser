@@ -17,3 +17,13 @@ def azurelight(weapon, character, attack):
                 character.weapon_effect_stats[stat] += int(value)
 
         return
+
+def staff_of_homa(weapon, character):
+        for key in list(character.weapon_effect_stats):
+                character.total_stats[key] -= character.weapon_effect_stats[key]
+                character.weapon_effect_stats[key] = 0
+    
+        character.total_stats["ATK"] += character.total_stats["HP"] * 0.008
+        character.weapon_effect_stats["ATK"] += character.total_stats["HP"] * 0.008
+    
+        return

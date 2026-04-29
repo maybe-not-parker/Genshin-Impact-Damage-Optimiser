@@ -199,6 +199,7 @@ class Character():
                   self.weapon_stats[self.weapon["affix"].split("_")[0]] += float(self.weapon["affix"].split("_")[1])
             except:
                 pass
+            
             return None
       def calculate_total_stats(self):
             self.total_base_atk = self.weapon["base_atk"] + self.base_stats["ATK"]
@@ -210,9 +211,19 @@ class Character():
             self.total_stats["CD"] += self.base_stats["CD"]
             self.total_stats[self.bonus_stat[0]] += float(self.bonus_stat[1])
             self.total_atk = self.total_base_atk * (1+self.total_stats["ATK%"]/100) + self.total_stats["ATK"]
-            self.total_hp = self.total_base_atk * (1+self.total_stats["HP%"]/100) + self.total_stats["HP"]
-            self.total_def = self.total_base_atk * (1+self.total_stats["DEF%"]/100) + self.total_stats["DEF"]
-            return None
+            self.total_hp = self.base_stats["HP"] * (1+self.total_stats["HP%"]/100) + self.total_stats["HP"]
+            self.total_def = self.base_stats["DEF"] * (1+self.total_stats["DEF%"]/100) + self.total_stats["DEF"]
+
+            conditional = self.weapon.get("conditional_affix")
+            if isinstance(conditional, dict):
+                  passive = conditional.get("passive")
+                  if passive:
+                        source_value = getattr(self, f"total_{passive['source'].lower()}", 0)
+                        bonus = source_value * passive["source_multiplier"]/100
+                        self.total_stats[passive["target"]] += bonus
+                        
+
+                        return None
       def external_buffs(self, buffs):
             if not hasattr(self, '_pre_buff_stats'):
                   self._pre_buff_stats = self.total_stats.copy()
@@ -232,7 +243,8 @@ class Character():
             self.total_atk = self._pre_buff_atk
             del self._pre_buff_stats
             del self._pre_buff_atk
-
+      def calculate_total_atk(self):
+            return self.total_base_atk * (1+self.total_stats["ATK%"]/100) + self.total_stats["ATK"]
       def add_temporary_buff(self, buff):
             for key, value in buff.items():
                   if key in self.total_stats:
@@ -580,16 +592,54 @@ class Skirk(Character):
             if all(character.character_data["element"] in ("Cryo", "Hydro") and team.count("cryo") > 0 and team.count("hydro") > 0 for character in team):
                   for i in team:
                         i.talents[1] += 1
-      def calculate_total_atk(self):
-            return self.total_base_atk * (1+self.total_stats["ATK%"]/100) + self.total_stats["ATK"]
-
-class team():
+      
+class Escoffier(Character):
+      def __init__(self, character, level, constellation=0, talents=[9,10,9]):
+             super().__init__(character, level, constellation, talents)
+      
+      def a1_passive(self, team):
+           if len(team) < 4:
+                 return
+           a4_passive_count = 0
+           team_elements = [character.character_data["element"] for character in team]
+           for element in team_elements:
+                 if element == "cryo" or element == "hydro":
+                       a4_passive_count += 1
+      def calculate_damage(self, attack):
+            attack = attack.lower()
+            if "n" in attack:
+                  pass
+            elif "e" in attack:
+                  return helper_functions.damage_formula(self.skill_multiplier[self.talents[1] - 1]["skill"] + self.skill_multiplier[self.talents[1] - 1]["summon"]*20 + self.skill_multiplier[self.talents[1] - 1]["arkhe"], 
+                                                      self.calculate_total_atk(),
+                                                      self.total_stats["CR"],
+                                                      self.total_stats["CD"],
+                                                      self.character_level,
+                                                      enemy_level,
+                                                      self.total_stats["EM"],
+                                                      0,
+                                                      0,
+                                                      False,
+                                                      0,
+                                                      0,
+                                                      0.1,
+                                                      0,
+                                                      1,
+                                                      0,
+                                                      self.total_stats["CRYO"],
+                                                      0)
+            elif "q" in attack:
+                  pass
+           
+                  
+class create_team():
       def __init__(self, characters):
             self.characters = characters
             self.max_team_size = 4
             self.team_buffs = {}
             self.onfield_buff = {}
             self.active_character = None
+            self.apply_team_resonance()
       def apply_team_resonance(self):
             resonance_buff = helper_functions.team_resonance(self.characters)
             for character in self.characters:
@@ -603,9 +653,11 @@ class team():
       def insert_character(self, character):
             if len(self.characters) < self.max_team_size:
                   self.characters.append(character)
+            self.apply_team_resonance()
       def remove_character(self, character):
             if character in self.characters:
                   self.characters.remove(character)
+            self.apply_team_resonance()
 def main():
       eula = Eula("Eula", 90, 2, [10, 10, 10])
       eula.init_base_stats()
@@ -643,6 +695,13 @@ def main():
       artifact_effects.marechaussee(artifact_list, skirk, stacks=3)
       num = 0
 
+      escoffier = Escoffier("Escoffier", 90, 0, [1, 1, 1])
+      escoffier.init_base_stats()
+      escoffier.init_weapon("staff_of_homa")
+      escoffier.calculate_artifact_total_stats()
+      escoffier.calculate_weapon_stats()
+      escoffier.calculate_total_stats()
+
       #skirk.calculate_damage("te")
       #num += skirk.calculate_damage("n1")
       #num += skirk.calculate_damage("n2")
@@ -651,9 +710,11 @@ def main():
       #num += skirk.calculate_damage("n2")
       control = helper_functions.skirk_combo(skirk)
       skirk.skirk_reset()
-
+      skirk.total_stats["ATK%"] += 20
       response = helper_functions.skirk_combo(skirk)
-      print(f"{(response/control - 1)*100:.2f}%")
-
+      #print(f"{(response/control - 1)*100:.2f}%")
+      
+      team = create_team([skirk, eula])
+      print(escoffier.calculate_damage("e"))
 if __name__ == "__main__":
       main()

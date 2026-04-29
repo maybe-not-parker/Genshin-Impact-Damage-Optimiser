@@ -8,13 +8,27 @@
         }
     },
     "polearm" : {
+        "staff_of_homa": {
+            "base_atk": 608.07,
+            "bonus"   : "CD_66.2",
+            "affix"   : "HP%_20",
+            "conditional_affix" : {
+                "passive" : {
+                    "source": "HP",
+                    "source_multiplier": 0.8,
+                    "target" : "ATK"
+                },
+                "hp_below_50" : 1
+            }
+        }
         
     },
     "sword"   : {
         "aquila_favonia": {
             "base_atk": 674.33,
             "bonus"   : "PHYSICAL_41.35",
-            "affix"   : "ATK%_20"
+            "affix"   : "ATK%_20",
+            "conditional_affix" : {}
         },
         "azurelight" : {
             "base_atk": 674.34,

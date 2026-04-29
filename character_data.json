@@ -1,5 +1,6 @@
 {
     "Eula": {"base_stats": {"HP": 13226, "ATK": 342.03, "DEF":750.88, "CR": 5.0, "CD": 50, "bonus_ascension": "CD_38.4"}, 
+    "element": "cryo",
     "normal_attack_multiplier": [
         [89.73, 93.55, 113.6, 112.64, 143.66],
         [97.04, 101.17, 122.84, 121.81, 155.36],
@@ -99,6 +100,7 @@
 
 
     "Skirk" : {"base_stats": {"HP": 12417, "ATK": 358.77, "DEF": 806.21, "CR": 5.0, "CD": 50, "bonus_ascension": "CD_38.4"},
+    "element": "cryo",
     "normal_attack_multiplier": [
     [54.52, 49.79, 64.84, 60.8, 82.9, 133.64],
     [58.96, 53.85, 70.06, 65.75, 89.65, 144.52],
@@ -135,23 +137,50 @@
     [355.23, 320.39, 405.04, 430.8, 525.86, 357.42]
 ],
     "burst_multiplier": [
-    {"slash": 613.80, "final_slash": 204.6, "subtlety": 19.32, "rift_absorption": [3.5, 4.0, 7.2, 8.8, 11.0]},
-    {"slash": 659.85, "final_slash": 219.95, "subtlety": 20.77, "rift_absorption": [4.0, 7.2, 9.6, 12.0, 12.0]},
-    {"slash": 706.25, "final_slash": 235.29, "subtlety": 22.22, "rift_absorption": [4.5, 7.8, 10.4, 13.0, 13.0]},
-    {"slash": 767.25, "final_slash": 255.75, "subtlety": 24.15, "rift_absorption": [5.0, 8.4, 11.2, 16.0, 14.0]},
-    {"slash": 813.10, "final_slash": 271.1, "subtlety": 25.6, "rift_absorption": [5.5, 9.0, 12.8, 16.0, 15.0]},
-    {"slash": 859.30, "final_slash": 286.44, "subtlety": 27.05, "rift_absorption": [6.0, 9.6, 12.8, 16.0, 16.0]},
-    {"slash": 920.70, "final_slash": 306.9, "subtlety": 28.99, "rift_absorption": [6.5, 10.2, 13.6, 17.0, 17.0]},
-    {"slash": 981.80, "final_slash": 327.36, "subtlety": 30.92, "rift_absorption": [7.0, 10.8, 14.4, 18.0, 18.0]},
-    {"slash": 1043.46, "final_slash": 347.82, "subtlety": 32.85, "rift_absorption": [7.5, 11.4, 15.2, 19.0, 19.0]},
-    {"slash": 1104.84, "final_slash": 368.28, "subtlety": 34.78, "rift_absorption": [8.0, 12.0, 16.0, 20.0, 20.0]},
-    {"slash": 1166.22, "final_slash": 388.74, "subtlety": 36.71, "rift_absorption": [8.5, 12.6, 16.8, 21.0, 21.0]},
-    {"slash": 1227.60, "final_slash": 409.2, "subtlety": 38.65, "rift_absorption": [9.0, 13.2, 17.6, 22.0, 22.0]},
-    {"slash": 1304.35, "final_slash": 434.78, "subtlety": 41.06, "rift_absorption": [9.5, 13.8, 18.4, 24.0, 22.0]},
+    {"slash": 613.80, "final_slash": 204.6, "subtlety": 19.32, "rift_absorption": [3.5, 6.6, 8.8, 11.0]},
+    {"slash": 659.85, "final_slash": 219.95, "subtlety": 20.77, "rift_absorption": [4.0, 7.2, 9.6, 12.0]},
+    {"slash": 706.25, "final_slash": 235.29, "subtlety": 22.22, "rift_absorption": [4.5, 7.8, 10.4, 13.0]},
+    {"slash": 767.25, "final_slash": 255.75, "subtlety": 24.15, "rift_absorption": [5.0, 8.4, 11.2, 14.0]},
+    {"slash": 813.10, "final_slash": 271.1, "subtlety": 25.6, "rift_absorption": [5.5, 9.0, 12.0, 15.0]},
+    {"slash": 859.30, "final_slash": 286.44, "subtlety": 27.05, "rift_absorption": [6.0, 9.6, 12.8, 16.0]},
+    {"slash": 920.70, "final_slash": 306.9, "subtlety": 28.99, "rift_absorption": [6.5, 10.2, 13.6, 17.0]},
+    {"slash": 981.80, "final_slash": 327.36, "subtlety": 30.92, "rift_absorption": [7.0, 10.8, 14.4, 18.0]},
+    {"slash": 1043.46, "final_slash": 347.82, "subtlety": 32.85, "rift_absorption": [7.5, 11.4, 15.2, 19.0]},
+    {"slash": 1104.84, "final_slash": 368.28, "subtlety": 34.78, "rift_absorption": [8.0, 12.0, 16.0, 20.0]},
+    {"slash": 1166.22, "final_slash": 388.74, "subtlety": 36.71, "rift_absorption": [8.5, 12.6, 16.8, 21.0]},
+    {"slash": 1227.60, "final_slash": 409.2, "subtlety": 38.65, "rift_absorption": [9.0, 13.2, 17.6, 22.0]},
+    {"slash": 1304.35, "final_slash": 434.78, "subtlety": 41.06, "rift_absorption": [9.5, 13.8, 18.4, 23.0]},
     {"slash": 1381.05, "final_slash": 460.35, "subtlety": 43.48, "rift_absorption": [10.0, 14.4, 19.2, 24.0, 24.0]},
-    {"slash": 1457.80, "final_slash": 485.93, "subtlety": 45.89, "rift_absorption": [10.5, 15.0, 20.0, 25.0, 25.0]}
+    {"slash": 1457.80, "final_slash": 485.93, "subtlety": 45.89, "rift_absorption": [10.5, 15.0, 20.0, 25.0]}
 ],
     "a1_multiplier": {},
     "a4_multiplier":{"normal_multiplier": [110, 120, 170], "burst_multiplier": [105, 115, 160]},
-    "weapon_archetype": "sword"}
+    "weapon_archetype": "sword"},
+
+
+    "Escoffier" : {"base_stats": {"HP": 13348, "ATK": 346.81, "DEF": 731.66, "CR": 5.0, "CD": 50, "bonus_ascension": "CR_19.2"},
+    "element": "cryo",
+    "normal_attack_multiplier": [],
+    "charged_attack_multiplier": [],
+    "skill_multiplier": [
+        {"skill": 50.4, "summon": 120, "arkhe": 33.6},
+        {"skill": 54.18, "summon": 129, "arkhe": 36.12},
+        {"skill": 57.96, "summon": 138, "arkhe": 38.64},
+        {"skill": 63, "summon": 150, "arkhe": 42},
+        {"skill": 66.78, "summon": 159, "arkhe": 44.52},
+        {"skill": 70.56, "summon": 168, "arkhe": 47.04},
+        {"skill": 75.6, "summon": 180, "arkhe": 50.4},
+        {"skill": 80.64, "summon": 192, "arkhe": 53.76},
+        {"skill": 85.68, "summon": 204, "arkhe": 57.12},
+        {"skill": 90.72, "summon": 216, "arkhe": 60.48},
+        {"skill": 95.76, "summon": 228, "arkhe": 63.84},
+        {"skill": 100.8, "summon": 240, "arkhe": 67.2},
+        {"skill": 107.1, "summon": 255, "arkhe": 71.4},
+        {"skill": 113.4, "summon": 270, "arkhe": 75.6},
+        {"skill": 119.7, "summon": 285, "arkhe": 79.8}
+],
+    "burst_multiplier": [],
+    "a1_multiplier": 138.24,
+    "a4_multiplier": [5, 10, 15, 55],
+    "weapon_archetype": "polearm"}
 }
